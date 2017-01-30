@@ -41,7 +41,7 @@ public static void main(String[] args) throws Exception
 	int newAttr = graph.newAttribute(tUser, "rank", DataType.Double, AttributeKind.Basic);
 
 	// Extend the graph with "admires" edges
-	createAdmiresEdges2(graph, s);
+	createAdmiresEdges(graph, s);
 
         //
 	// Compute and store attribute value for each User
@@ -63,47 +63,8 @@ public static void main(String[] args) throws Exception
 	sparksee.close();
 }
 
-private static void createAdmiresEdges(Graph graph)
-{
 
-	System.out.println("Creating admires edges");
-	int tAdmires = graph.newEdgeType("admires", true, true);
-	int tUser = graph.findType("User");
-	int tLikes = graph.findType("likes");
-	int tWrites = graph.findType("creates");
-	Objects users = graph.select(tUser);
-	ObjectsIterator oit = users.iterator();
-	int counter = 0;
-	while (oit.hasNext())
-	{
-		long id = oit.next();
-		Objects likes = graph.neighbors(id, tLikes, EdgesDirection.Outgoing);
-		ObjectsIterator lit = likes.iterator();
-		while (lit.hasNext())
-		{
-			long messageId = lit.next();
-			Objects creator = graph.neighbors(messageId, tWrites, EdgesDirection.Ingoing);
-			long admiredId = creator.any();
-			creator.close();
-			if (graph.findEdge(tAdmires, id, admiredId) == Objects.InvalidOID)
-			{
-				graph.newEdge(tAdmires, id, admiredId);
-			}
-		}
-		lit.close();
-		likes.close();
-		counter++;
-		if (counter % 100 == 0)
-		{
-			System.out.println("Number of users processed: " + counter + " out of " + users.count());
-
-		}
-	}
-	oit.close();
-	users.close();
-}
-
-private static void createAdmiresEdges2(Graph graph, Session sess)
+private static void createAdmiresEdges(Graph graph, Session sess)
 {
 
 	System.out.println("Creating admires edges");
