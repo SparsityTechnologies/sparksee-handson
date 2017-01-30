@@ -96,17 +96,9 @@ public class Exercise2 {
         int i = 0;
         System.out.println("Initializing labels");
         //
-        // Initialize the labels of each user
+        // TODO: Initialize the labels of each user
         //
-        Objects users = graph.select(tUser);
-        ObjectsIterator oit = users.iterator();
-        while(oit.hasNext()){
-            long oid = oit.next();
-            Value v = new Value();
-            v.setInteger(i++);
-            graph.setAttribute(oid, tlabel, v);
-        }
-        oit.close();
+       
         
         System.out.println("Spreading labels");
         //
@@ -122,18 +114,9 @@ public class Exercise2 {
                 HashMap<Integer, Integer> map = new HashMap<Integer,Integer>();
                 
                 //
-                // Fill the map containing the number of occurrences of each label of the user knows 
+                // TODO: Fill the map containing the number of occurrences of each label of the user knows 
                 //
-                Objects neighbors = graph.neighbors(oid,tknows,EdgesDirection.Outgoing);
-                ObjectsIterator nit = neighbors.iterator();
-                while(nit.hasNext()){
-                    Value v = graph.getAttribute(nit.next(), tlabel);
-                    Integer label = v.getInteger();
-                    Integer currentValue = map.containsKey(label) ? map.get(label) : 0;
-                    map.put(label, currentValue+1);
-                }
-                nit.close();
-                neighbors.close();
+              
                 // 
                 // Follow the map entries decreasingly first by occurrences, and then by label
                 //
@@ -147,15 +130,9 @@ public class Exercise2 {
                     });
                                     
                     //
-                    // Set the most frequent label if it is different than the current one
+                    // TODO: Set the most frequent label if it is different than the current one
                     //
-                    Entry<Integer,Integer> newLabel = list.iterator().next();
-                    Value v = graph.getAttribute(oid,tlabel);
-                    if(v.getInteger() != newLabel.getKey()){
-                        v.setInteger(newLabel.getKey());
-                        graph.setAttribute(oid, tlabel, v);
-                        converged=false;
-                    }
+                 
                 }
             }
             oit.close();
@@ -185,11 +162,11 @@ public class Exercise2 {
         vit.close();
         vals.close();
         ObjectsIterator toTagIt = toTag.iterator();
-        /*while(toTagIt.hasNext()){
+        while(toTagIt.hasNext()){
             Value v = new Value();
             v.setInteger(-1);
             graph.setAttribute(toTagIt.next(),tlabel,v);
-        }*/
+        }
         toTag.close();
         
         //
