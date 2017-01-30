@@ -66,58 +66,10 @@ public static void main(String[] args) throws Exception
 
 private static void createAdmiresEdges(Graph graph, Session sess)
 {
-
-	System.out.println("Creating admires edges");
-	int tAdmires = graph.newEdgeType("admires", true, true);
-	int tUser = graph.findType("User");
-	int tLikes = graph.findType("likes");
-	int tWrites = graph.findType("creates");
-	Objects users = graph.select(tUser);
-	ObjectsIterator oit = users.iterator();
-	int threshold = 10;
-	int counter = 0;
-	while (oit.hasNext())
-	{
-		long id = oit.next();
-		Objects candidates = sess.newObjects();
-		Objects likes = graph.neighbors(id, tLikes, EdgesDirection.Outgoing);
-		ObjectsIterator lit = likes.iterator();
-		while (lit.hasNext())
-		{
-			long messageId = lit.next();
-			Objects creator = graph.neighbors(messageId, tWrites, EdgesDirection.Ingoing);
-			long admiredId = creator.any();
-			candidates.add(admiredId);
-			creator.close();
-		}
-		lit.close();
-
-		ObjectsIterator candidatesIt = candidates.iterator();
-		while (candidatesIt.hasNext())
-		{
-			long cid = candidatesIt.next();
-			Objects messages = graph.neighbors(cid, tWrites, EdgesDirection.Outgoing);
-			Objects intersection = Objects.combineIntersection(likes, messages);
-			if (intersection.size() > threshold && graph.findEdge(tAdmires, id, cid) == Objects.InvalidOID)
-			{
-				graph.newEdge(tAdmires, id, cid);
-			}
-			intersection.close();
-			messages.close();
-		}
-		candidatesIt.close();
-		likes.close();
-
-		counter++;
-		if (counter % 1000 == 0)
-		{
-			System.out.println("Number of users processed: " + counter + " out of " + users.count());
-
-		}
-		candidates.close();
-	}
-	oit.close();
-	users.close();
+	//  
+	// TODO: Create admire edges from likes to users
+	//
+	
 }
 
 /**
@@ -138,17 +90,13 @@ public static void computePageRank(Graph graph, int attr)
 	int tAdmires = graph.findType("admires");
 
         //
-	// Initialize the pagerank attribute of each node to 1.0
+	// TODO: Initialize the pagerank attribute of each node to 1.0
 	//
 	Value v = new Value();
 	v.setDouble(1.0);
 	Objects users = graph.select(tUser);
-	ObjectsIterator oit = users.iterator();
-	while (oit.hasNext())
-	{
-		graph.setAttribute(oit.next(), attr, v);
-	}
-	oit.close();
+	
+	
 
         //
 	// Perform 10 pagerank iterations
@@ -160,30 +108,17 @@ public static void computePageRank(Graph graph, int attr)
 		while (oit.hasNext())
 		{
 			long oid = oit.next();
-                //
-			// Compute the pagerank contribution for each of the user  
+			double accum = 0.0;
+			//
+			// TODO: Compute the pagerank contribution for each of the user  
 			// (remember to consider directions)
 			//
-			double accum = 0.0;
-			Objects neighbors = graph.neighbors(oid, tAdmires, EdgesDirection.Ingoing);
-			ObjectsIterator nit = neighbors.iterator();
-			while (nit.hasNext())
-			{
-				long neighbor = nit.next();
-				long outDegree = graph.degree(neighbor, tAdmires, EdgesDirection.Outgoing);
-				graph.getAttribute(neighbor, attr, v);
-				if (outDegree > 0)
-				{
-					accum += v.getDouble() / outDegree;
-				}
-			}
-			nit.close();
-			neighbors.close();
-                //
-			// Compute and store the new pagerank for the user
+			
+			
 			//
-			v.setDouble((1 - 0.85) + 0.85 * accum);
-			graph.setAttribute(oid, attr, v);
+			// TODO: Compute and store the new pagerank for the user
+			//
+			
 		}
 		oit.close();
 	}
@@ -207,35 +142,15 @@ public static void computePageRank(Graph graph, int attr)
 public static void getTheMostPopularUsers(Graph graph, int attr, int k)
 {
         //
-	// Retrieve values ordered in an descendent way
+	// TODO: Retrieve values ordered in an descendent way
 	// (the first will be the highest Value).
 	//
-	int tUser = graph.findType("User");
-	int aNick = graph.findAttribute(tUser, "nickname");
-	Values values = graph.getValues(attr);
-	ValuesIterator vit = values.iterator(Order.Descendent);
+	
 
         //
-	// Print, for each value, up to k users with that value.
+	// TODO: Print, for each value, up to k users with that value.
 	// Proceed with the next value unless k users have already been print
 	//
-	int printed = 0;
-	while (vit.hasNext() && printed < k)
-	{
-		Value v = vit.next();
-		Objects object = graph.select(attr, Condition.Equal, v);
-		ObjectsIterator oit = object.iterator();
-		while (oit.hasNext() && printed < k)
-		{
-			long oid = oit.next();
-			Value nickName = graph.getAttribute(oid, aNick);
-			System.out.println(nickName.getString() + " " + v.getDouble());
-			printed++;
-		}
-		oit.close();
-		object.close();
-	}
-	vit.close();
-	values.close();
+	
 }
 }
