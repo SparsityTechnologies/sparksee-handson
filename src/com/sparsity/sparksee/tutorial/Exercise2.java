@@ -185,11 +185,11 @@ public class Exercise2 {
         vit.close();
         vals.close();
         ObjectsIterator toTagIt = toTag.iterator();
-        /*while(toTagIt.hasNext()){
+        while(toTagIt.hasNext()){
             Value v = new Value();
             v.setInteger(-1);
             graph.setAttribute(toTagIt.next(),tlabel,v);
-        }*/
+        }
         toTag.close();
         
         //
