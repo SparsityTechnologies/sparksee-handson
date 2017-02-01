@@ -96,7 +96,8 @@ public class Exercise2 {
         int i = 0;
         System.out.println("Initializing labels");
         //
-        // TODO: Initialize the labels of each user
+        // TODO: Initialize the labels of each user: create a new attribute "label" 
+	//for tUSer. Initially each node has its own label. Use integer for  labelling.
         //
        
         
@@ -111,11 +112,12 @@ public class Exercise2 {
             oit = users.iterator();
             while(oit.hasNext()){
                 long oid = oit.next();
-                HashMap<Integer, Integer> map = new HashMap<Integer,Integer>();
+                HashMap<Integer, Integer> map = new HashMap<Integer,Integer>(); //MAP<LABEL,#LABEL>
                 
-                //
-                // TODO: Fill the map containing the number of occurrences of each label of the user knows 
-                //
+		//
+		//TODO: Count the number of occurrences of each label from the neighbors of oit and fill the map.
+		//
+		
               
                 // 
                 // Follow the map entries decreasingly first by occurrences, and then by label
@@ -130,7 +132,7 @@ public class Exercise2 {
                     });
                                     
                     //
-                    // TODO: Set the most frequent label if it is different than the current one
+                    // TODO: set the label of oit to the most frequent label 
                     //
                  
                 }
